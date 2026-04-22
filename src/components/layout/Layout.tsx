@@ -27,8 +27,11 @@ const Layout = ({ children }: PropsWithChildren) => {
       </header>
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">{children}</main>
       <footer className="border-t border-divider bg-raised">
-        <div className="mx-auto max-w-5xl px-6 py-4 text-sm text-muted">
-          Built with React, TypeScript, Vite, and Tailwind v4.
+        <div className="mx-auto max-w-5xl px-6 py-4 text-center text-sm text-muted">
+          <p>
+            Made with <span aria-label="love">❤️</span> by Ian Skelskey. &copy;{" "}
+            {new Date().getFullYear()}
+          </p>
         </div>
       </footer>
     </div>
