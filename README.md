@@ -18,6 +18,8 @@ Opinionated starting point for React + TypeScript + Vite + Tailwind v4 projects.
 - **GitHub Pages deploy workflow** — publishes `dist/` on every push to `main`.
 - **Documented conventions** in [.github/copilot-instructions.md](.github/copilot-instructions.md).
 
+Every one of the above is exercised at least once by the demo app, so nothing ships as dead code. The `/demo` route is the showcase — see [Removing the demo](#removing-the-demo).
+
 ## Scripts
 
 | Script                   | Purpose                                                            |
@@ -62,12 +64,23 @@ src/
 │   └── useDocumentTitle.ts  # Per-route <title>
 ├── pages/
 │   ├── HomePage.tsx
+│   ├── DemoPage.tsx         # Showcase — delete when you fork
 │   └── NotFound.tsx
 ├── types/
 │   └── index.ts             # All shared types
 └── utils/
     └── fetchWithTimeout.ts  # fetch() + AbortController timeout
 ```
+
+## Removing the demo
+
+The `/demo` route exists so every built-in renders at least once — the template ships no dead code. To strip it:
+
+1. Delete `src/pages/DemoPage.tsx` and `public/demo-data.json`.
+2. Remove the `DemoPage` import, its `<Route>`, the `Demo` `<NavLink>` in `Layout.tsx`, and the closing paragraph in `HomePage.tsx`.
+3. Drop `DemoStatus` from `src/types/index.ts`.
+
+Keep the route-level `<ErrorBoundary resetKey={location.pathname}>` in `App.tsx` — it is part of the shell, not the demo.
 
 ## Conventions
 

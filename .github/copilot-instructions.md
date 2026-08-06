@@ -38,6 +38,7 @@ Only use these color names in Tailwind classes. **Never** use raw Tailwind palet
 | `text-faint`                            | Decorative-only — do NOT use for readable content |
 | `text-accent` / `bg-accent`             | Brand color                                       |
 | `text-accent-hover` / `bg-accent-hover` | Hover state of accent                             |
+| `text-on-accent`                        | Text on `bg-accent` — **never** `text-white`      |
 | `text-error` / `bg-error`               | Validation errors, destructive states             |
 | `bg-surface`                            | Page background                                   |
 | `bg-raised`                             | Card / input backgrounds                          |
@@ -53,7 +54,8 @@ Dark mode is implemented via `@media (prefers-color-scheme: dark)` overriding th
 ### WCAG contrast
 
 - `text-muted` meets AA on `bg-surface` and `bg-raised` in both modes.
-- `text-faint` does **not** meet AA — use it only for decorative chrome.
+- `text-faint` does **not** meet AA — use it only for decorative chrome that is also `aria-hidden`. Anything a reader is meant to read (including version strings and metadata) uses `text-muted`.
+- Text on a colored background needs a **paired foreground token**, because dark mode re-maps the background. `bg-accent` pairs with `text-on-accent`; a hardcoded `text-white` fails AA in dark mode at 2.5:1. Introduce the same pairing for any new surface color.
 - When introducing a new color, document its contrast ratio in a comment.
 
 ---
@@ -177,6 +179,7 @@ Call `useDocumentTitle(title?)` in every page. Never mutate `document.title` dir
 ## Common mistakes to avoid
 
 - Adding raw Tailwind colors (`text-red-600`, `bg-blue-100`). Use semantic tokens.
+- Pairing `bg-accent` with `text-white`. Use `text-on-accent` — white fails AA in dark mode.
 - Adding `dark:` variants. Dark mode is handled by `prefers-color-scheme`.
 - Treating `text-faint` as body text — it's decorative.
 - Creating new pages without calling `useDocumentTitle`.

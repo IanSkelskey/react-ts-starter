@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const HomePage = () => {
@@ -31,6 +32,16 @@ const HomePage = () => {
           </p>
         </li>
       </ul>
+
+      <p className="text-muted">
+        The{" "}
+        <Link to="/demo" className="font-medium text-accent hover:text-accent-hover">
+          Demo page
+        </Link>{" "}
+        exercises every built-in — <code>fetchWithTimeout</code>, <code>config/env</code>,{" "}
+        <code>ErrorBoundary</code>, <code>RouteFallback</code>, and the semantic tokens. Delete it
+        along with <code>public/demo-data.json</code> when you fork the template.
+      </p>
     </section>
   );
 };

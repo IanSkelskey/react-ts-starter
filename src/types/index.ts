@@ -6,4 +6,9 @@
  * unions across.
  */
 
-export {};
+/** Payload returned by the demo endpoint (`public/demo-data.json`). */
+export type DemoStatus = {
+  service: string;
+  status: "ok" | "degraded";
+  message: string;
+};

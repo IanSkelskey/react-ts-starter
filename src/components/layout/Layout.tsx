@@ -1,5 +1,9 @@
 import type { PropsWithChildren } from "react";
 import { NavLink } from "react-router";
+import { APP_VERSION } from "../../config/env";
+
+const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+  `font-medium ${isActive ? "text-accent" : "text-foreground hover:text-accent"}`;
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (
@@ -12,13 +16,13 @@ const Layout = ({ children }: PropsWithChildren) => {
           <nav aria-label="Primary">
             <ul className="flex items-center gap-6 text-sm">
               <li>
-                <NavLink
-                  to="/"
-                  className={({ isActive }) =>
-                    `font-medium ${isActive ? "text-accent" : "text-foreground hover:text-accent"}`
-                  }
-                >
+                <NavLink to="/" end className={navLinkClass}>
                   Home
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/demo" className={navLinkClass}>
+                  Demo
                 </NavLink>
               </li>
             </ul>
@@ -32,6 +36,8 @@ const Layout = ({ children }: PropsWithChildren) => {
             Made with <span aria-label="love">❤️</span> by Ian Skelskey. &copy;{" "}
             {new Date().getFullYear()}
           </p>
+          {/* A version string is readable content, not chrome — `text-muted`, not `text-faint`. */}
+          <p className="mt-1 text-xs text-muted">v{APP_VERSION}</p>
         </div>
       </footer>
     </div>
