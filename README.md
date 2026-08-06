@@ -26,7 +26,7 @@ Every one of the above is exercised at least once by the demo app, so nothing sh
 | ------------------------ | ------------------------------------------------------------------ |
 | `npm run dev`            | Start the Vite dev server.                                         |
 | `npm run build`          | Type-check and produce a production build.                         |
-| `npm run preview`        | Preview the production build locally.                              |
+| `npm run preview`        | Preview the production build locally. **Audit this, not `dev`.**   |
 | `npm run lint`           | Run ESLint.                                                        |
 | `npm run typecheck`      | Run `tsc -b --noEmit`.                                             |
 | `npm run format`         | Write Prettier formatting.                                         |
@@ -72,6 +72,14 @@ src/
     └── fetchWithTimeout.ts  # fetch() + AbortController timeout
 ```
 
+## Auditing performance
+
+Run Lighthouse against `npm run preview` (port 4173), never `npm run dev`. The dev server ships unminified modules, the HMR client, and react-refresh — roughly 5 MB over 22 requests, versus ~82 kB over 6 for the real build. Auditing `dev` measures Vite's development ergonomics, not your site:
+
+```bash
+npm run build && npm run preview   # then audit http://localhost:4173/
+```
+
 ## Removing the demo
 
 The `/demo` route exists so every built-in renders at least once — the template ships no dead code. To strip it:
@@ -98,18 +106,19 @@ The template ships with [`.github/workflows/deploy.yml`](.github/workflows/deplo
 
 1. In your repo, go to **Settings → Pages** and set **Source** to **GitHub Actions**.
 2. Push to `main`. The workflow builds with `BASE_PATH=/<repo>/` so assets resolve correctly for a project page (e.g. `https://<user>.github.io/<repo>/`).
-3. Deep links (e.g. a hard refresh on `/about`) survive via the [rafgraph SPA redirect trick](https://github.com/rafgraph/spa-github-pages):
-   - [public/404.html](public/404.html) loads [public/scripts/spa-redirect.js](public/scripts/spa-redirect.js), which encodes the requested path into a query string and redirects to `index.html` (served with a 200, unlike a plain 404 fallback).
-   - A small script is inlined in the `<head>` of [index.html](index.html) to decode that query string before React boots. It's inlined rather than loaded as an external file so it doesn't become a render-blocking request.
+3. Deep links (e.g. a hard refresh on `/demo`) survive via the [rafgraph SPA redirect trick](https://github.com/rafgraph/spa-github-pages):
+   - `dist/404.html` is generated at build time by the `spa-github-pages-404` plugin in [vite.config.ts](vite.config.ts), with the resolved `base` baked into it. GitHub serves it for any unknown path; it encodes the requested path into a query string and bounces to `index.html`, which IS served with a 200.
+   - A small script inlined in the `<head>` of [index.html](index.html) decodes that query string before React boots. Both halves are inline, so neither costs a request.
 
-**User/organization page** (`<user>.github.io`) or **custom domain**:
+This adapts to the base path automatically — there is nothing to hand-edit for a project page, a user page, or a custom domain.
 
-- Override `BASE_PATH` to `/` in the workflow (or edit the default in [vite.config.ts](vite.config.ts)).
-- Keep `pathSegmentsToKeep = 0` in [public/scripts/spa-redirect.js](public/scripts/spa-redirect.js) (the default).
+> **Why generated, not `public/404.html`?** Vite copies `public/` verbatim and never rewrites paths inside it. A `<script src="/scripts/…">` there resolves against the domain root, so on a project page served from `/<repo>/` it 404s and the redirect silently dies.
 
-**Project page** (`<user>.github.io/<repo>/`): change `pathSegmentsToKeep` from `0` to `1` in [public/scripts/spa-redirect.js](public/scripts/spa-redirect.js).
+**User/organization page** (`<user>.github.io`) or **custom domain**: override `BASE_PATH` to `/` in the workflow, or edit the default in [vite.config.ts](vite.config.ts). Nothing else changes.
 
-`BrowserRouter` reads `import.meta.env.BASE_URL` as its `basename`, so routing works under any base path without further changes.
+**Project page** (`<user>.github.io/<repo>/`): nothing to configure — the workflow derives `BASE_PATH` from the repo name.
+
+`BrowserRouter` uses `BASE_PATH` from [src/config/env.ts](src/config/env.ts) as its `basename`, so routing works under any base path without further changes.
 
 ## License
 
