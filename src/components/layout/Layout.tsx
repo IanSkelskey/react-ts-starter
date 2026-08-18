@@ -1,16 +1,28 @@
 import type { PropsWithChildren } from "react";
 import { NavLink } from "react-router";
-import { APP_VERSION } from "../../config/env";
+import { APP_VERSION, BASE_PATH } from "../../config/env";
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `font-medium ${isActive ? "text-accent" : "text-foreground hover:text-accent"}`;
+
+/*
+ * Vite copies `public/` verbatim and never rewrites paths pointing into it, so
+ * the base has to be applied by hand. A literal "/icon.svg" 404s on a project
+ * page, which is served from /<repo>/ rather than /.
+ */
+const iconUrl = `${BASE_PATH}icon.svg`;
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (
     <div className="flex min-h-full flex-col bg-surface text-foreground">
       <header className="border-b border-divider bg-raised">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <NavLink to="/" className="font-bold text-accent hover:text-accent-hover">
+          <NavLink
+            to="/"
+            className="flex items-center gap-2 font-bold text-accent hover:text-accent-hover"
+          >
+            {/* Decorative — the link already names the app. */}
+            <img src={iconUrl} alt="" aria-hidden width={24} height={24} />
             React TS Template
           </NavLink>
           <nav aria-label="Primary">

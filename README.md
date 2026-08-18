@@ -1,4 +1,8 @@
+![react-ts-starter hero image](public/hero.webp)
+
 # React TS Template
+
+[![CI](https://github.com/IanSkelskey/react-ts-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/IanSkelskey/react-ts-starter/actions/workflows/ci.yml)
 
 Opinionated starting point for React + TypeScript + Vite + Tailwind v4 projects. Distilled from the shared patterns in production apps — biased toward accessibility, strict types, and a small dependency surface.
 
@@ -20,19 +24,6 @@ Opinionated starting point for React + TypeScript + Vite + Tailwind v4 projects.
 
 Every one of the above is exercised at least once by the demo app, so nothing ships as dead code. The `/demo` route is the showcase — see [Removing the demo](#removing-the-demo).
 
-## Scripts
-
-| Script                   | Purpose                                                            |
-| ------------------------ | ------------------------------------------------------------------ |
-| `npm run dev`            | Start the Vite dev server.                                         |
-| `npm run build`          | Type-check and produce a production build.                         |
-| `npm run preview`        | Preview the production build locally. **Audit this, not `dev`.**   |
-| `npm run lint`           | Run ESLint.                                                        |
-| `npm run typecheck`      | Run `tsc -b --noEmit`.                                             |
-| `npm run format`         | Write Prettier formatting.                                         |
-| `npm run prettier-check` | Verify Prettier formatting (used in CI).                           |
-| `npm run verify`         | Prettier-check → lint → typecheck → build. Must pass before merge. |
-
 ## Getting started
 
 ```bash
@@ -46,39 +37,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-## Project structure
-
-```
-src/
-├── App.tsx                  # Route declarations + Suspense boundary
-├── main.tsx                 # Entry: StrictMode + ErrorBoundary + BrowserRouter
-├── index.css                # Tailwind @theme tokens + base styles + a11y globals
-├── components/
-│   ├── ErrorBoundary.tsx    # Route-aware error boundary
-│   ├── RouteFallback.tsx    # <Suspense> fallback
-│   └── layout/
-│       └── Layout.tsx       # Header/Main/Footer shell
-├── config/
-│   └── env.ts               # VITE_* reader + build-time constants
-├── hooks/
-│   └── useDocumentTitle.ts  # Per-route <title>
-├── pages/
-│   ├── HomePage.tsx
-│   ├── DemoPage.tsx         # Showcase — delete when you fork
-│   └── NotFound.tsx
-├── types/
-│   └── index.ts             # All shared types
-└── utils/
-    └── fetchWithTimeout.ts  # fetch() + AbortController timeout
-```
-
-## Auditing performance
-
-Run Lighthouse against `npm run preview` (port 4173), never `npm run dev`. The dev server ships unminified modules, the HMR client, and react-refresh — roughly 5 MB over 22 requests, versus ~82 kB over 6 for the real build. Auditing `dev` measures Vite's development ergonomics, not your site:
-
-```bash
-npm run build && npm run preview   # then audit http://localhost:4173/
-```
+Run `npm run verify` before committing — it is the same chain CI runs. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full script list, project layout, and conventions.
 
 ## Removing the demo
 
@@ -89,16 +48,6 @@ The `/demo` route exists so every built-in renders at least once — the templat
 3. Drop `DemoStatus` from `src/types/index.ts`.
 
 Keep the route-level `<ErrorBoundary resetKey={location.pathname}>` in `App.tsx` — it is part of the shell, not the demo.
-
-## Conventions
-
-Full conventions are documented in [.github/copilot-instructions.md](.github/copilot-instructions.md). The highlights:
-
-- All colors use semantic tokens. Never use raw palette classes (`text-red-600`).
-- All env reads go through `src/config/env.ts`.
-- Props types are local to each component file; no shared prop-type modules.
-- State machines use typed string unions, not booleans.
-- Run `npm run verify` before committing.
 
 ## Deploying to GitHub Pages
 
@@ -119,6 +68,10 @@ This adapts to the base path automatically — there is nothing to hand-edit for
 **Project page** (`<user>.github.io/<repo>/`): nothing to configure — the workflow derives `BASE_PATH` from the repo name.
 
 `BrowserRouter` uses `BASE_PATH` from [src/config/env.ts](src/config/env.ts) as its `basename`, so routing works under any base path without further changes.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
