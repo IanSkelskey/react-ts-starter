@@ -6,6 +6,29 @@
 
 Opinionated starting point for React + TypeScript + Vite + Tailwind v4 projects. Distilled from the shared patterns in production apps — biased toward accessibility, strict types, and a small dependency surface.
 
+<div align="center">
+<table>
+  <tr>
+    <td align="center" width="140">
+      <img src="public/tech/react.svg" alt="" height="40" /><br />
+      <b>React</b><br />19
+    </td>
+    <td align="center" width="140">
+      <img src="public/tech/typescript.svg" alt="" height="40" /><br />
+      <b>TypeScript</b><br />5
+    </td>
+    <td align="center" width="140">
+      <img src="public/tech/vite.svg" alt="" height="40" /><br />
+      <b>Vite</b><br />8
+    </td>
+    <td align="center" width="140">
+      <img src="public/tech/tailwindcss.svg" alt="" height="40" /><br />
+      <b>Tailwind</b><br />v4
+    </td>
+  </tr>
+</table>
+</div>
+
 ## What's inside
 
 - **React 19 + TypeScript 5 + Vite 8** with strict `tsconfig`.
