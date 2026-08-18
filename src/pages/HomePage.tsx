@@ -27,7 +27,7 @@ const HomePage = () => {
         <li className="rounded-lg border border-divider bg-raised p-4">
           <h2 className="font-semibold text-foreground">Deploy to GitHub Pages</h2>
           <p className="mt-1 text-sm text-muted">
-            A workflow in <code>.github/workflows/deploy.yml</code> ships the
+            A workflow in <code>.github/workflows/deploy.yml</code> ships the{" "}
             <code>dist/</code> folder on every push to <code>main</code>.
           </p>
         </li>
